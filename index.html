@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css" />
+        <link rel="stylesheet" type="text/css" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/label.css" />
+        <link rel="stylesheet" href="css/MarkerCluster.css" />
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+        <script src="js/leaflet.js"></script>
+        <script src="js/OSMBuildings-Leaflet.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/label.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="data/json_PHLPedCrashes2008150.js"></script>
+        <script>
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[39.8749879176,-75.3956164642],[40.1396499034,-74.8314772594]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        var feature_group = new L.featureGroup([]);
+        var bounds_group = new L.featureGroup([]);
+        var raster_group = new L.LayerGroup([]);
+        var basemap0 = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 28
+        });
+        basemap0.addTo(map);
+        var initialOrder = new Array();
+        var layerOrder = new Array();
+        function stackLayers() {
+            for (index = 0; index < initialOrder.length; index++) {
+                map.removeLayer(initialOrder[index]);
+                map.addLayer(initialOrder[index]);
+            }
+        }
+        function restackLayers() {
+            for (index = 0; index < layerOrder.length; index++) {
+                layerOrder[index].bringToFront();
+            }
+        }
+        layerControl = L.control.layers({},{},{collapsed:false});
+        function pop_PHLPedCrashes2008150(feature, layer) {
+            var popupContent = '<table><tr><th scope="row">CRASH_YEAR</th><td>' + (feature.properties['CRASH_YEAR'] !== null ? Autolinker.link(String(feature.properties['CRASH_YEAR'])) : '') + '</td></tr><tr><th scope="row">CRASH_MONT</th><td>' + (feature.properties['CRASH_MONT'] !== null ? Autolinker.link(String(feature.properties['CRASH_MONT'])) : '') + '</td></tr><tr><th scope="row">DAY_OF_WEE</th><td>' + (feature.properties['DAY_OF_WEE'] !== null ? Autolinker.link(String(feature.properties['DAY_OF_WEE'])) : '') + '</td></tr><tr><th scope="row">HOUR_OF_DA</th><td>' + (feature.properties['HOUR_OF_DA'] !== null ? Autolinker.link(String(feature.properties['HOUR_OF_DA'])) : '') + '</td></tr><tr><th scope="row">TIME_OF_DA</th><td>' + (feature.properties['TIME_OF_DA'] !== null ? Autolinker.link(String(feature.properties['TIME_OF_DA'])) : '') + '</td></tr><tr><th scope="row">MAX_SEVERI</th><td>' + (feature.properties['MAX_SEVERI'] !== null ? Autolinker.link(String(feature.properties['MAX_SEVERI'])) : '') + '</td></tr><tr><th scope="row">INJURY_COU</th><td>' + (feature.properties['INJURY_COU'] !== null ? Autolinker.link(String(feature.properties['INJURY_COU'])) : '') + '</td></tr><tr><th scope="row">MIN_INJ_CO</th><td>' + (feature.properties['MIN_INJ_CO'] !== null ? Autolinker.link(String(feature.properties['MIN_INJ_CO'])) : '') + '</td></tr><tr><th scope="row">MOD_INJ_CO</th><td>' + (feature.properties['MOD_INJ_CO'] !== null ? Autolinker.link(String(feature.properties['MOD_INJ_CO'])) : '') + '</td></tr><tr><th scope="row">MAJ_INJ_CO</th><td>' + (feature.properties['MAJ_INJ_CO'] !== null ? Autolinker.link(String(feature.properties['MAJ_INJ_CO'])) : '') + '</td></tr><tr><th scope="row">FATAL_COUN</th><td>' + (feature.properties['FATAL_COUN'] !== null ? Autolinker.link(String(feature.properties['FATAL_COUN'])) : '') + '</td></tr><tr><th scope="row">PERSON_COU</th><td>' + (feature.properties['PERSON_COU'] !== null ? Autolinker.link(String(feature.properties['PERSON_COU'])) : '') + '</td></tr><tr><th scope="row">VEHICLE_CO</th><td>' + (feature.properties['VEHICLE_CO'] !== null ? Autolinker.link(String(feature.properties['VEHICLE_CO'])) : '') + '</td></tr><tr><th scope="row">AUTOMOBILE</th><td>' + (feature.properties['AUTOMOBILE'] !== null ? Autolinker.link(String(feature.properties['AUTOMOBILE'])) : '') + '</td></tr><tr><th scope="row">BUS_COUNT</th><td>' + (feature.properties['BUS_COUNT'] !== null ? Autolinker.link(String(feature.properties['BUS_COUNT'])) : '') + '</td></tr><tr><th scope="row">BICYCLE_CO</th><td>' + (feature.properties['BICYCLE_CO'] !== null ? Autolinker.link(String(feature.properties['BICYCLE_CO'])) : '') + '</td></tr><tr><th scope="row">BICYCLE_DE</th><td>' + (feature.properties['BICYCLE_DE'] !== null ? Autolinker.link(String(feature.properties['BICYCLE_DE'])) : '') + '</td></tr><tr><th scope="row">BICYCLE_MA</th><td>' + (feature.properties['BICYCLE_MA'] !== null ? Autolinker.link(String(feature.properties['BICYCLE_MA'])) : '') + '</td></tr><tr><th scope="row">PED_COUNT</th><td>' + (feature.properties['PED_COUNT'] !== null ? Autolinker.link(String(feature.properties['PED_COUNT'])) : '') + '</td></tr><tr><th scope="row">PED_MAJ_IN</th><td>' + (feature.properties['PED_MAJ_IN'] !== null ? Autolinker.link(String(feature.properties['PED_MAJ_IN'])) : '') + '</td></tr><tr><th scope="row">PED_DEATH_</th><td>' + (feature.properties['PED_DEATH_'] !== null ? Autolinker.link(String(feature.properties['PED_DEATH_'])) : '') + '</td></tr><tr><th scope="row">UNK_INJ_PE</th><td>' + (feature.properties['UNK_INJ_PE'] !== null ? Autolinker.link(String(feature.properties['UNK_INJ_PE'])) : '') + '</td></tr><tr><th scope="row">UNK_INJ_DE</th><td>' + (feature.properties['UNK_INJ_DE'] !== null ? Autolinker.link(String(feature.properties['UNK_INJ_DE'])) : '') + '</td></tr><tr><th scope="row">LOCATION_T</th><td>' + (feature.properties['LOCATION_T'] !== null ? Autolinker.link(String(feature.properties['LOCATION_T'])) : '') + '</td></tr><tr><th scope="row">INTERSECT_</th><td>' + (feature.properties['INTERSECT_'] !== null ? Autolinker.link(String(feature.properties['INTERSECT_'])) : '') + '</td></tr><tr><th scope="row">SCH_ZONE_I</th><td>' + (feature.properties['SCH_ZONE_I'] !== null ? Autolinker.link(String(feature.properties['SCH_ZONE_I'])) : '') + '</td></tr><tr><th scope="row">ROAD_CONDI</th><td>' + (feature.properties['ROAD_CONDI'] !== null ? Autolinker.link(String(feature.properties['ROAD_CONDI'])) : '') + '</td></tr><tr><th scope="row">WEATHER</th><td>' + (feature.properties['WEATHER'] !== null ? Autolinker.link(String(feature.properties['WEATHER'])) : '') + '</td></tr><tr><th scope="row">ILLUMINATI</th><td>' + (feature.properties['ILLUMINATI'] !== null ? Autolinker.link(String(feature.properties['ILLUMINATI'])) : '') + '</td></tr><tr><th scope="row">DEC_LAT</th><td>' + (feature.properties['DEC_LAT'] !== null ? Autolinker.link(String(feature.properties['DEC_LAT'])) : '') + '</td></tr><tr><th scope="row">DEC_LONG</th><td>' + (feature.properties['DEC_LONG'] !== null ? Autolinker.link(String(feature.properties['DEC_LONG'])) : '') + '</td></tr><tr><th scope="row">Count</th><td>' + (feature.properties['Count'] !== null ? Autolinker.link(String(feature.properties['Count'])) : '') + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStylePHLPedCrashes2008150() {
+            return {
+                radius: 2.0,
+                fillColor: '#af640d',
+                color: '#000000',
+                weight: 0.0,
+                opacity: 1.0,
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                fillOpacity: 1.0
+            }
+        }
+        function doPointToLayerPHLPedCrashes2008150(feature, latlng) {
+            return L.circleMarker(latlng, doStylePHLPedCrashes2008150())
+        }
+        var json_PHLPedCrashes2008150JSON = new L.geoJson(json_PHLPedCrashes2008150, {
+            onEachFeature: pop_PHLPedCrashes2008150, 
+            pointToLayer: doPointToLayerPHLPedCrashes2008150
+            });
+        layerOrder[layerOrder.length] = json_PHLPedCrashes2008150JSON;
+
+        bounds_group.addLayer(json_PHLPedCrashes2008150JSON);
+        initialOrder[initialOrder.length] = json_PHLPedCrashes2008150JSON;
+        feature_group.addLayer(json_PHLPedCrashes2008150JSON);
+        raster_group.addTo(map);
+        feature_group.addTo(map);
+        stackLayers();
+        map.on('overlayadd', restackLayers);
+        </script>
+    </body>
+</html>
